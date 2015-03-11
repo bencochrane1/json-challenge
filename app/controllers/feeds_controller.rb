@@ -30,15 +30,13 @@ class FeedsController < ApplicationController
 
         
         JSON.parse( feed_response ).each do |object|
-            to_save = {type: network}
+            to_save = {network: network}
             object.each do |key, value|
-                binding.pry
-                to_save[key.to_sym] = value
-                Feed.new(to_save)
                 
+                to_save[key.to_sym] = value
+                Feed.create(to_save)
             end
-        end
-        # binding.pry   
+        end 
     end
 
     def is_json?( response )
