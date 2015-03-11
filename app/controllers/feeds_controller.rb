@@ -2,41 +2,34 @@ class FeedsController < ApplicationController
 
     def index
         require 'httparty'
+
         @twitter_response = get_response("http://codefight.davidbanham.com/twitter")
         @facebook_response = get_response("http://codefight.davidbanham.com/facebook")
         @instagram_response = get_response("http://codefight.davidbanham.com/instagram")
 
-        # SAVE
+        save_feed( @twitter_response, "twitter" )
+        save_feed( @instagram_response, "instagram" )
+        save_feed( @facebook_response, "facebook" )
 
-        save_feeds( @twitter_response, "twitter" )
-        save_feeds( @facebook_response, "facebook" )
-        save_feeds( @instagram_response, "instagram" )
+        returned_value = {
+            twitter:  Feed.where(network: "twitter").order(created_at: :desc).limit(3).pluck(:tweet),
+            instagram: Feed.where(network: "instagram").order(created_at: :desc).limit(3).pluck(:picture),
+            facebook: Feed.where(network: "facebook").order(created_at: :desc).limit(3).pluck(:status)
+        }
 
-
-        # returned_value = {
-        #     twitter: @twitter_response || Feed.where(:type => "twitter").limit(3),
-        #     instagram: @instagram_response || Feed.where(:type => "instagram").limit(3),
-        #     facebook: @facebook_response || Feed.where(:type => "facebook").limit(3)
-        # }
-
+        render json: returned_value
     end
 
     private
 
-    def save_feeds( feed_response, network )
-        if !feed_response
-            return false
-        end
-
-        
-        JSON.parse( feed_response ).each do |object|
-            to_save = {network: network}
-            object.each do |key, value|
-                
-                to_save[key.to_sym] = value
-                Feed.create(to_save)
+    def save_feed( feed_response, network )
+        if feed_response
+            JSON.parse( feed_response ).each do |object|
+              to_save = { network: network }
+              to_save = to_save.merge( object )
+              Feed.create( to_save )
             end
-        end 
+        end
     end
 
     def is_json?( response )
