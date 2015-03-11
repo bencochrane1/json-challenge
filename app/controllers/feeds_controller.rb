@@ -2,7 +2,7 @@ class FeedsController < ApplicationController
 
   def index
 
-    # this uses the get_reponse function to parse the JSON from the below URLs
+    # this uses the get_reponse method to parse the JSON from the below URLs
     twitter_response = get_response("http://codefight.davidbanham.com/twitter")
     facebook_response = get_response("http://codefight.davidbanham.com/facebook")
     instagram_response = get_response("http://codefight.davidbanham.com/instagram")
@@ -52,7 +52,7 @@ class FeedsController < ApplicationController
   end
 
 
-  # gets a response in JSON format using the parser HTTParty gem - it also uses the is_json function to see whether or not it's json that is given from the URL - if it's not then return false - if it is return the JSON string
+  # gets a response in JSON format using the parser HTTParty gem - it also uses the is_json method to see whether or not it's json that is given from the URL - if it's not then return false - if it is return the JSON string
   def get_response( url )
     returned = HTTParty.get(url)
     is_json?( returned )
