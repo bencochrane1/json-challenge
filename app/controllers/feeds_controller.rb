@@ -3,15 +3,15 @@ class FeedsController < ApplicationController
   def index
 
     # this uses the get_reponse function to parse the JSON from the below URLs
-    @twitter_response = get_response("http://codefight.davidbanham.com/twitter")
-    @facebook_response = get_response("http://codefight.davidbanham.com/facebook")
-    @instagram_response = get_response("http://codefight.davidbanham.com/instagram")
+    twitter_response = get_response("http://codefight.davidbanham.com/twitter")
+    facebook_response = get_response("http://codefight.davidbanham.com/facebook")
+    instagram_response = get_response("http://codefight.davidbanham.com/instagram")
 
 
     # this uses the save_feed method on the various urls from above as well as takes in the network name relevant to each social network
-    save_feed( @twitter_response, "twitter" )
-    save_feed( @instagram_response, "instagram" )
-    save_feed( @facebook_response, "facebook" )
+    save_feed( twitter_response, "twitter" )
+    save_feed( instagram_response, "instagram" )
+    save_feed( facebook_response, "facebook" )
 
 
     # this is the overall json that we want to output to localhost:3000 which creates a hash with the twitter, facebook and instagram content
