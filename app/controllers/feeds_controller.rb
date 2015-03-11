@@ -23,17 +23,19 @@ class FeedsController < ApplicationController
 
     private
 
-    def save_feeds( feed_response, type )
+    def save_feeds( feed_response, network )
         if !feed_response
             return false
         end
 
-        to_save = {}
+        
         JSON.parse( feed_response ).each do |object|
-            # to_save[key] = value
+            to_save = {type: network}
             object.each do |key, value|
                 binding.pry
-                to_save[key] = value
+                to_save[key.to_sym] = value
+                Feed.new(to_save)
+                
             end
         end
         # binding.pry   
